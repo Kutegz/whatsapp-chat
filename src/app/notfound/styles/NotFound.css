@@ -1,0 +1,12 @@
+.not__Found {
+  display: flex;
+  padding: 10px;
+  flex-direction: column;
+  margin: 20;
+  font-size: larger;
+  align-items: center;
+}
+
+.not__Found > h2 {
+  color: red;
+}
