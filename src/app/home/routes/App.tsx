@@ -16,6 +16,7 @@ const App = () => {
         <div className="app__body">
           <Sidebar />
           <Routes>
+            <Route path="/" element={<Chat />} />
             <Route path="/rooms/:roomId" element={<Chat />} />
             {/* <Route path="/messages" element={<Message />} /> */}
             <Route path="*" element={<NotFound />} />
