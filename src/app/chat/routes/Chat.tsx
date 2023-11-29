@@ -2,7 +2,7 @@ import '../styles/Chat.css';
 import { useParams } from 'react-router-dom';
 import { Avatar, IconButton } from '@mui/material';
 import { avatarUrls } from '../../common/constants';
-import { useEffect, useState, MouseEvent } from 'react';
+import { useEffect, useState, FormEvent } from 'react';
 import {
   AttachFile,
   InsertEmoticon,
@@ -67,7 +67,7 @@ const Chat = () => {
     }
   }, [roomId]);
 
-  const sendMessage = async (e: MouseEvent) => {
+  const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const messagesCollection = collection(
@@ -128,7 +128,7 @@ const Chat = () => {
       </div>
       <div className="chat__footer">
         <InsertEmoticon />
-        <form>
+        <form onSubmit={sendMessage}>
           <input
             type="text"
             id="message"
@@ -137,9 +137,7 @@ const Chat = () => {
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
           />
-          <button type="submit" onClick={sendMessage}>
-            Send a message
-          </button>
+          <button type="submit">Send a message</button>
         </form>
         <Mic />
       </div>

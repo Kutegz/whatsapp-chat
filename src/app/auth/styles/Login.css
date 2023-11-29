@@ -21,8 +21,8 @@
 }
 
 .login__container > button {
-  margin-top: 50px;
+  margin-top: 50px !important;
   text-transform: inherit !important;
-  background-color: #0a8d48;
-  color: white;
+  background-color: #0a8d48 !important;
+  color: white !important;
 }
