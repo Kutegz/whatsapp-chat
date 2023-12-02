@@ -28,6 +28,7 @@ import {
 const Chat = () => {
   const { user } = UserData();
   const { roomId } = useParams();
+  const [loading, setLoading] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState('');
   const [newMessage, setNewMessage] = useState('');
   const [messages, setMessages] = useState<MessageResponse[]>([]);
@@ -69,6 +70,7 @@ const Chat = () => {
 
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
 
     const messagesCollection = collection(
       firestoreDb,
@@ -82,6 +84,7 @@ const Chat = () => {
     });
 
     setNewMessage('');
+    setLoading(false);
   };
 
   return (
@@ -110,22 +113,28 @@ const Chat = () => {
           </IconButton>
         </div>
       </div>
-      <div className="chat__body">
-        {messages.map((message, index) => (
-          <p
-            key={index}
-            className={`chat__message ${
-              message.name === user.displayName && 'chat__reciever'
-            }`}
-          >
-            <span className="chat__name">{message.name}</span>
-            {message.message}
-            <span className="chat__timestamp">
-              {new Date(message.timestamp.toDate()).toUTCString()}
-            </span>
-          </p>
-        ))}
-      </div>
+      {loading ? (
+        <div className="chat__body">
+          <h3>Loading...</h3>
+        </div>
+      ) : (
+        <div className="chat__body">
+          {messages.map((message, index) => (
+            <p
+              key={index}
+              className={`chat__message ${
+                message.name === user.displayName && 'chat__reciever'
+              }`}
+            >
+              <span className="chat__name">{message.name}</span>
+              {message.message}
+              <span className="chat__timestamp">
+                {new Date(message.timestamp.toDate()).toUTCString()}
+              </span>
+            </p>
+          ))}
+        </div>
+      )}
       <div className="chat__footer">
         <InsertEmoticon />
         <form onSubmit={sendMessage}>
@@ -134,6 +143,7 @@ const Chat = () => {
             id="message"
             name="message"
             placeholder="Type a message"
+            required
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
           />
