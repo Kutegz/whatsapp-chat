@@ -1,7 +1,9 @@
 import '../styles/Chat.css';
 import { useParams } from 'react-router-dom';
 import { Avatar, IconButton } from '@mui/material';
+import Loader from '../../common/components/Loader';
 import { avatarUrls } from '../../common/constants';
+import useGetMessages from '../hooks/useGetMessages';
 import { useEffect, useState, FormEvent } from 'react';
 import {
   AttachFile,
@@ -12,18 +14,7 @@ import {
 } from '@mui/icons-material';
 import { firestoreDb } from '../../../configs/firebase';
 import { UserData } from '../../auth/context/UserContext';
-import { MessageResponse } from '../models/responses/messageResponse';
-import { RoomResponse } from '../../sidebar/models/responses/roomResponse';
-import {
-  addDoc,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  orderBy,
-  query,
-  serverTimestamp,
-} from 'firebase/firestore/lite';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore/lite';
 
 const Chat = () => {
   const { user } = UserData();
@@ -31,41 +22,10 @@ const Chat = () => {
   const [loading, setLoading] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState('');
   const [newMessage, setNewMessage] = useState('');
-  const [messages, setMessages] = useState<MessageResponse[]>([]);
-  const [roomData, setRoomData] = useState<RoomResponse>({ name: '' });
+  const { messages, roomData } = useGetMessages();
 
   useEffect(() => {
     setAvatarUrl(avatarUrls[Math.floor(Math.random() * avatarUrls.length)]);
-  }, [roomId]);
-
-  useEffect(() => {
-    if (roomId) {
-      const getRoom = async () => {
-        const roomRef = doc(firestoreDb, 'rooms', roomId);
-        const roomSnapshot = await getDoc(roomRef);
-        const roomName = roomSnapshot.data() as RoomResponse;
-        setRoomData(roomName);
-
-        const messagesCollection = collection(
-          firestoreDb,
-          'rooms',
-          roomId,
-          'messages'
-        );
-
-        const messagesQuery = query(
-          messagesCollection,
-          orderBy('timestamp', 'asc')
-        );
-        const messagesSnapshot = await getDocs(messagesQuery);
-        const messageList = messagesSnapshot.docs.map(
-          (doc) => doc.data() as MessageResponse
-        );
-        setMessages(messageList);
-      };
-
-      getRoom();
-    }
   }, [roomId]);
 
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
@@ -115,7 +75,7 @@ const Chat = () => {
       </div>
       {loading ? (
         <div className="chat__body">
-          <h3>Loading...</h3>
+          <Loader />
         </div>
       ) : (
         <div className="chat__body">
