@@ -47,6 +47,8 @@ const Chat = () => {
     setLoading(false);
   };
 
+  console.log(loading);
+
   return (
     <div className="chat">
       <div className="chat__header">
