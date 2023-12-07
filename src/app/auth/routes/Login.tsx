@@ -3,7 +3,7 @@ import { Button } from '@mui/material';
 import { FirebaseError } from 'firebase/app';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, provider } from '../../../configs/firebase';
-import WhatsAppLogo from '../../../assets/WhatsAppLogo.png';
+import LoginLogo from '../../../assets/CILFullLogo.png';
 import { UserData } from '../context/UserContext';
 
 const Login = () => {
@@ -31,9 +31,9 @@ const Login = () => {
   return (
     <div className="login">
       <div className="login__container">
-        <img src={WhatsAppLogo} alt="WhatsApp Logo" />
+        <img src={LoginLogo} alt="ClinicMaster Logo" />
         <div className="login__text">
-          <h1>Sign in to WhatsApp</h1>
+          <p>ClinicMaster Chat</p>
         </div>
         <Button type="button" onClick={signIn}>
           Sign In with Google
